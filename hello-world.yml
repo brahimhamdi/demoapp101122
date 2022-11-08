@@ -1,4 +1,4 @@
 template: Bonjour, %s!
-defaultName: m2i
+defaultName: KANOMA
 server:
   rootPath: /api/
