@@ -1,0 +1,70 @@
+pipeline {
+    agent any
+    
+    tools {
+     maven "M3"
+     'org.jenkinsci.plugins.docker.commons.tools.DockerTool' 'docker'
+         }
+    environment {
+      img = ''
+       registryCredential='dockerhub'
+        }
+    stages {
+       stage('GitClone') {
+            steps {
+                git 'https://github.com/brahimhamdi/demoapp101122'
+                }
+            }
+
+        stage('Build') {
+            steps {     
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+                }
+                post {
+                    success {
+                        junit '**/target/surefire-reports/TEST-*.xml'
+                        archiveArtifacts 'target/*.jar'
+                        }
+                    }
+            }
+
+        stage('BuildImgDocker') {
+            steps {
+                script {
+                    img = docker.build("brahimhamdi/demoapp:${env.BUILD_ID}")
+                    img = docker.build("brahimhamdi/demoapp:latest")
+                    }
+                }
+        }
+
+        stage('TestImgDocker') {
+            steps {
+                script {
+                    sh "docker run -d --rm --name demoapp-test -p 8000:8080 brahimhamdi/demoapp:${env.BUILD_ID}"
+                    sh "sleep 10"
+                    sh "docker stop demoapp-test"
+                        }
+                }
+            }
+            
+        stage('PushImgDocker') {
+            steps {
+                script {
+                         docker.withRegistry('',registryCredential) {
+                         img.push()
+                         }
+                     }
+                }
+            }
+
+        stage('DeployProd_K8s') {
+            steps {
+                script {
+                         sh 'scp ansible-plays/demoapp-playbook.yml vagrant@192.168.201.10:/tmp/'            
+                         sh 'ssh vagrant@192.168.201.10 "ansible-playbook /tmp/demoapp-playbook.yml"'
+                         }
+                     }
+                }
+
+        }
+}
