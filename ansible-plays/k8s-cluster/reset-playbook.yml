@@ -1,0 +1,13 @@
+- hosts: all
+  become: yes
+  tasks:
+  - name: reset tous les noeuds
+    command: "kubeadm reset -f"
+  - name: supprimer containerd
+    apt:
+     name: containerd
+     state: absent
+     purge: true
+  - name: supprimer tous les dossuer k8s 
+    command: "rm -rf /etc/kubernetes /var/lib/etcd /var/lib/kubelet .kube"
+    when: "'master' in inventory_hostname"
