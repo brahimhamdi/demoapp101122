@@ -5,6 +5,7 @@ metadata:
   name: demoapp
   labels:
     app: demoapp
+  namespace: demoapp
 spec:
   replicas: 1
   selector:
@@ -25,6 +26,7 @@ metadata:
   name: demoapp
   labels:
     app: demoapp
+  namespace: demoapp
 spec:
   type: NodePort
   ports:
