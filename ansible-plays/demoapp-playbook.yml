@@ -5,7 +5,7 @@
   tasks:
   - name: Vérifier cluster k8s
     command: kubectl cluster-info
-    register: k8s-cluster-ok
+    register: k8sClusterOk
   - name: deploy demoapp
     command: kubectl apply -f /tmp/demoapp-manifest.yml
 
