@@ -68,11 +68,13 @@
     apt_key:
      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
      state: present
+
   - name: Ajout d'un répo apt pour Kubernetes
     apt_repository:
      repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
      state: present
      filename: kubernetes.list
+
   - name: Installer les binaires Kubernetes
     apt:
      name: "{{ packages }}"
@@ -87,6 +89,9 @@
      path: /etc/default/kubelet
      create: yes
      line: KUBELET_EXTRA_ARGS=--node-ip={{ ansible_eth1.ipv4.address }}
+    notify:
+    - Restarter Containerd
+
 
   handlers :
   - name: Restarter Containerd
