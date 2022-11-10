@@ -2,7 +2,8 @@
   become: yes
   tasks:
   - name: reset tous les noeuds
-    command: "kubeadm reset -f "
+    command: "kubeadm reset -f"
+
   - name: supprimer les fichiers sur master
     file: 
      path: "{{ item }}"
@@ -13,8 +14,21 @@
      - /var/lib/kubelet/
      - /home/vagrant/.kube"
     when: "'master' in inventory_hostname"
-  - name: Vérifier le reset
-    command: "for i in `ps aux | grep kube | awk {'print $2'}` ; do kill -9 $i; done"
+
+  - name: Get running processes
+    shell: "ps -ef | grep -v grep | grep kube | awk '{print $2}'"
+    register: running_processes
+
+  - name: Kill running processes
+    shell: "kill {{ item }}"
+    with_items: "{{ running_processes.stdout_lines }}"
+
+  - name: Waiting until all running processes are killed
+    wait_for:
+     path: "/proc/{{ item }}/status"
+     state: absent
+    with_items: "{{ running_processes.stdout_lines }}"
+
   - name: supprimer containerd
     apt:
      name: containerd
