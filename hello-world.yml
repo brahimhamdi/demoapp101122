@@ -1,4 +1,4 @@
 template: Bonjour, %s!
-defaultName: KANOMA
+defaultName: Orsys
 server:
   rootPath: /api/
