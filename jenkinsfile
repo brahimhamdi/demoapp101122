@@ -57,10 +57,23 @@ pipeline {
                 }
             }
 
+  //      stage('Réinitialiser Cluster k8s') {
+//            steps {
+ //               script {
+  //                       sh 'scp -r ansible-plays/k8s-cluster vagrant@192.168.201.10:/tmp/'            
+//                         sh 'ssh vagrant@192.168.201.10 "ansible-playbook /tmp/k8s-cluster/reset-playbook.yml"'
+ //                        sh 'ssh vagrant@192.168.201.10 "ansible-playbook /tmp/k8s-cluster/all-playbook.yml"'
+  //                       sh 'ssh vagrant@192.168.201.10 "ansible-playbook /tmp/k8s-cluster/master-playbook.yml"'
+//                         sh 'ssh vagrant@192.168.201.10 "ansible-playbook /tmp/k8s-cluster/node-playbook.yml"'
+ //                        }
+  //                   }
+//                }
+
         stage('DeployProd_K8s') {
             steps {
                 script {
-                         sh 'scp ansible-plays/demoapp-playbook.yml vagrant@192.168.201.10:/tmp/'            
+                         sh 'scp ansible-plays/demoapp-playbook.yml vagrant@192.168.201.10:/tmp/'    
+                         sh 'scp k8s-manifests/demoapp-manifest.yml vagrant@192.168.201.10:/tmp/'            
                          sh 'ssh vagrant@192.168.201.10 "ansible-playbook /tmp/demoapp-playbook.yml"'
                          }
                      }
