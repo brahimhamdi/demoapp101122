@@ -6,6 +6,10 @@
   - name: Vérifier cluster k8s
     command: kubectl cluster-info
     register: k8sClusterOk
+  - name: Copier manifest yml sur master
+    copy:
+     src: /tmp/demoapp-manifest.yml
+     dest: /tmp/demoapp-manifest.yml 
   - name: deploy demoapp
     command: kubectl apply -f /tmp/demoapp-manifest.yml
 
