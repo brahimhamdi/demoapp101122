@@ -2,7 +2,7 @@
   become: yes
   tasks:
   - name: reset tous les noeuds
-    command: "kubeadm reset -f && rm -rf rm -rf /etc/kubernetes/ /var/lib/etcd/ /var/lib/kubelet/ /home/vagrant/.kube"
+    command: "kubeadm reset -f && rm -rf /etc/kubernetes/ /var/lib/etcd/ /var/lib/kubelet/ /home/vagrant/.kube"
   - name: Vérifier le reset
     command: "for i in `ps aux | grep kube | awk {'print $2'}` ; do kill -9 $i; done"
   - name: supprimer containerd
