@@ -3,7 +3,7 @@
 
   tasks:
   - name: Initialiser le cluster Kubernetes à l'aide de kubeadm
-    command: kubeadm init --apiserver-advertise-address="{{ ansible_eth1.ipv4.address }}" --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors="ERROR CRI"
+    command: kubeadm init --apiserver-advertise-address="{{ ansible_eth1.ipv4.address }}" --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors="CRI"
     tags :
     - init_cluster
 
